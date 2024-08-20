@@ -1,4 +1,5 @@
 from frota import *
+import pickle
 def operar_carro (carro : Carro):
     print('1- Ligar motor')
     print('2- Desligar motor')
@@ -22,21 +23,31 @@ if __name__ == "__main__":
     nm_modelo = input('Digite o modelo: ')
     nm_marca = input('Digite a marca: ')
     nm_cor = input('Digite a cor: ')
-    litros = input('Digite quantos litros tem no tanque')
-    consumo_medio = input('Digite o consumo medio de litros do carro por km')
-
     kms = float(input('Digite com quantos Kms: '))
 
-    carro1 = Carro(nm_modelo, nm_marca, nm_cor, 0, False, litros, consumo_medio)
+
+
 
     print('Cadastre o segundo carro')
     nm_modelo = input('Digite o modelo: ')
     nm_marca = input('Digite a marca: ')
     nm_cor = input('Digite a cor: ')
-    litros = input('Digite quantos litros tem no tanque')
-    consumo_medio = input('Digite o consumo medio de litros do carro por km')
+    kms = float(input('Digite com quantos Kms: '))
 
-    carro2 = Carro(nm_modelo, nm_marca, nm_cor, 0, False, litros, consumo_medio)
+    carro1 = Carro(nm_modelo, nm_marca, nm_cor, kms, motor = True)
+    carro2 = Carro(nm_modelo, nm_marca, nm_cor, kms, motor = True)
+
+    carros = {}
+    carros[id(carro1)] = carro1
+    carros[id(carro2)] = carro2
+
+    #Negocio do arquivo
+    try:
+        with open('carros3.plk', 'rb') as arquivo:
+            pickle.dump(carros, arquivo)
+    except Exception as e:
+        print(e)
+
     '''
     Controlando o carro 
     '''
@@ -60,10 +71,13 @@ if __name__ == "__main__":
             print(e)
 
     carro1.desligar()
-    print(carro1)
-    print('Parou')
-
     carro2.desligar()
-    print(carro2)
-    print('Parou')
 
+    print(carro1)
+    print(carro2)
+    if carro1.get_odometro() >= 600 or carro1.get_tanque() < 0:
+        print(f"o carro {carro1.modelo} terminou primeiro o destino/acabou primeiro com a gasolina")
+        print(carro1)
+    else:
+        print(f"o carro {carro2.modelo} terminou primeiro o destino/acabou primeiro com a gasolina")
+        print(carro2)
